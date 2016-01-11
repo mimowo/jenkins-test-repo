@@ -11,7 +11,9 @@
  <url>http://maven.apache.org</url>
 
  <scm>
-  <developerConnection>scm:git:https://github.com/mimowo/jenkins-test-repo.git</developerConnection>
+  <url>https://github.com/mimowo/jenkins-test-repo</url>
+  <connection>scm:git:git://github.com/mimowo/jenkins-test-repo.git</connection>
+  <developerConnection>scm:git:git@github.com:mimowo/jenkins-test-repo.git</developerConnection>
  </scm>
 
  <properties>
