@@ -10,6 +10,10 @@
  <name>test.jenkins</name>
  <url>http://maven.apache.org</url>
 
+ <scm>
+  <developerConnection>scm:git:git@github.com/mimowo/jenkins-test-repo.git</developerConnection>
+ </scm>
+
  <properties>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
  </properties>
@@ -31,6 +35,11 @@
     <configuration>
      <mainClass>org.misias.test.jenkins.App</mainClass>
     </configuration>
+   </plugin>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-release-plugin</artifactId>
+    <version>2.5.3</version>
    </plugin>
   </plugins>
  </build>
