@@ -3,7 +3,7 @@
 
   <groupId>org.misias</groupId>
   <artifactId>test.jenkins</artifactId>
-  <version>0.0.15-SNAPSHOT</version>
+  <version>0.0.15</version>
   <packaging>jar</packaging>
 
   <name>test.jenkins</name>
@@ -13,7 +13,7 @@
     <url>https://github.com/mimowo/jenkins-test-repo</url>
     <connection>scm:git:git://github.com/mimowo/jenkins-test-repo.git</connection>
     <developerConnection>scm:git:git@github.com:mimowo/jenkins-test-repo.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>test.jenkins-0.0.15</tag>
   </scm>
 
   <properties>
