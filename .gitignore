@@ -1,2 +1,14 @@
+<<<<<<< HEAD
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Maven
 target/
+
+# Jenkins
+.repository/
+
+/target/
 release.properties
