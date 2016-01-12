@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Eclipse
 .classpath
 .project
@@ -10,4 +11,4 @@ target/
 .repository/
 
 /target/
-/target/
+release.properties
