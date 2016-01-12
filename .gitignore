@@ -12,3 +12,4 @@ target/
 
 /target/
 release.properties
+release-pom.xml
