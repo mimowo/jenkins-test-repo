@@ -1,6 +1,8 @@
 def env = System.getenv()
 
 println env['RELEASE_VERSION']
+println env['RELEASE_FROM_BRANCH']
+println env['DEVELOPMENT_VERSION']
 def git_cmd = "git"
 def mvn_cmd = "mvn"
 def gradle_cmd = "gradle"
