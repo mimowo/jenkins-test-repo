@@ -28,3 +28,4 @@ git("checkout " + env['RELEASE_FROM_BRANCH'])
 mvn("--batch-mode release:update-versions -DdevelopmentVersion=" + developmentVersion)
 git('commit -m "version updated to ' + developmentVersion + '"')
 git('push')
+
