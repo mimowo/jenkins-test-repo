@@ -8,8 +8,14 @@ releaseFromBranch = env['RELEASE_FROM_BRANCH']
 println(git_cmd)
 
 def run(cmd) {
-	println(cmd)
-	println cmd.execute().text
+	println('Command: ' + cmd)
+	def proc = cmd.execute()
+	//proc.waitForOrKill(10000)
+	proc.text.eachLine {println it}
+	if (proc.exitValue()) {
+		println "Command failed!"
+	}
+	//assert !proc.exitValue()
 }
 
 def git(args) {
@@ -24,8 +30,13 @@ def gradle(args) {
 	run(gradle_cmd + " " + args)
 }
 
-git("checkout " + env['RELEASE_FROM_BRANCH'])
-mvn("--batch-mode release:update-versions -DdevelopmentVersion=" + developmentVersion)
+git('checkout ' + releaseFromBranch)
+git('pull')
+git('branch ' + releseVersion)
+//mvn('--batch-mode release:update-versions -DdevelopmentVersion=' + developmentVersion)
+//git('commit -m "version updated to ' + developmentVersion + '"')
+//git('push')
+git('checkout ' + releseVersion)
+mvn('--batch-mode release:update-versions -DreleaseVersion=' + releseVersion)
 git('commit -m "version updated to ' + developmentVersion + '"')
 git('push')
-
