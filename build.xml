@@ -1,5 +1,5 @@
 <project name="workbench" xmlns:if="ant:if" xmlns:unless="ant:unless">
-  <property environment="env" />
+  <property environment="myenv"/>
 
   <property name="source.branch" value="${env.GIT_BRANCH_NAME}" />
   <property name="target.branch" value="master" />
@@ -9,8 +9,7 @@
     <echo message="${env.RELEASE_BRANCH_FROM}" />
     <echo message="${env.releaseVersion}" />
     <echo message="${env.developmentVersion}" />
-    <echo message="${releaseVersion}" />
-    <echo message="${developmentVersion}" />
+    <echo message="${env.developmentVersion}" />
   </target>
 
 </project>
