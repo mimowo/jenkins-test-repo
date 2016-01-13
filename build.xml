@@ -1,18 +1,51 @@
 <project name="workbench" xmlns:if="ant:if" xmlns:unless="ant:unless">
-  <property environment="myenv"/>
+  <property environment="myenv" />
 
   <property name="source.branch" value="${env.GIT_BRANCH_NAME}" />
   <property name="target.branch" value="master" />
 
   <target name="prepare">
-    <echo message="${env.GIT_BRANCH_NAME}" />
-    <echo message="${env.RELEASE_BRANCH_FROM}" />
     <echo message="${RELEASE_FROM_BRANCH}" />
     <echo message="${RELEASE_VERSION}" />
     <echo message="${DEVELOPMENT_VERSION}" />
-    <echo message="${env.releaseVersion}" />
-    <echo message="${env.developmentVersion}" />
-    <echo message="${env.developmentVersion}" />
   </target>
 
+  <macrodef name="git">
+    <attribute name="outputproperty" default="" />
+    <attribute name="failonerror" default="yes" />
+    <element name="args" />
+    <sequential>
+      <echotimestamp />
+      <exec executable="echo" vmlauncher="false" taskname="cmd">
+        <arg value="git" />
+        <args />
+      </exec>
+      <exec executable="git" failonerror="@{failonerror}" taskname="git" if:blank="@{outputproperty}">
+        <args />
+      </exec>
+      <exec executable="git" failonerror="false" resultproperty="git.result" outputproperty="@{outputproperty}" unless:blank="@{outputproperty}">
+        <args />
+      </exec>
+      <echo message="${@{outputproperty}}" taskname="git" unless:blank="@{outputproperty}" />
+      <fail message="Failed" unless:blank="@{outputproperty}">
+        <condition>
+          <and>
+            <istrue value="@{failonerror}" />
+            <isfailure code="${git.result}" />
+          </and>
+        </condition>
+      </fail>
+      <echo taskname="git" />
+    </sequential>
+  </macrodef>
+
+  <macrodef name="echotimestamp">
+    <sequential>
+      <local name="timestamp" />
+      <tstamp>
+        <format property="timestamp" pattern="yyyy-MM-dd HH:mm:ss" />
+      </tstamp>
+      <echo message="${timestamp}" taskname="timestamp" />
+    </sequential>
+  </macrodef>
 </project>
