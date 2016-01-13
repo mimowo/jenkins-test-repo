@@ -13,7 +13,7 @@
   <url>https://github.com/mimowo/jenkins-test-repo</url>
   <connection>scm:git:git://github.com/mimowo/jenkins-test-repo.git</connection>
   <developerConnection>scm:git:git@github.com:mimowo/jenkins-test-repo.git</developerConnection>
-  <tag>test.jenkins-0.0.18</tag>
+  <tag>true</tag>
  </scm>
 
  <properties>
