@@ -3,7 +3,7 @@
 
  <groupId>org.misias</groupId>
  <artifactId>test.jenkins</artifactId>
- <version>0.0.22-SNAPSHOT</version>
+ <version>0.0.22</version>
  <packaging>jar</packaging>
 
  <name>test.jenkins</name>
@@ -13,7 +13,8 @@
   <url>https://github.com/mimowo/jenkins-test-repo</url>
   <connection>scm:git:git://github.com/mimowo/jenkins-test-repo.git</connection>
   <developerConnection>scm:git:git@github.com:mimowo/jenkins-test-repo.git</developerConnection>
- </scm>
+   <tag>test.jenkins-0.0.22</tag>
+  </scm>
 
  <properties>
   <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
