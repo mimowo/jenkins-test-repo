@@ -10,7 +10,7 @@ println(git_cmd)
 def run(cmd) {
 	println('Command: ' + cmd)
 	def proc = cmd.execute()
-	//proc.waitForOrKill(10000)
+	proc.waitFor()
 	proc.text.eachLine {println it}
 	if (proc.exitValue()) {
 		println "Command failed!"
