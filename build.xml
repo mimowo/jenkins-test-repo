@@ -7,6 +7,9 @@
   <target name="prepare">
     <echo message="${env.GIT_BRANCH_NAME}" />
     <echo message="${env.RELEASE_BRANCH_FROM}" />
+    <echo message="${RELEASE_BRANCH_FROM}" />
+    <echo message="${releaseVersion}" />
+    <echo message="${DEVELOPMENT_VERSION}" />
     <echo message="${env.releaseVersion}" />
     <echo message="${env.developmentVersion}" />
     <echo message="${env.developmentVersion}" />
