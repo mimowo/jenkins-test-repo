@@ -6,7 +6,7 @@ developmentVersion = env['DEVELOPMENT_VERSION']
 releaseFromBranch = env['RELEASE_FROM_BRANCH']
 
 new GroovyShell().parse( new File( 'ReleaseCommons.gvy' ) ).with {
-  assert git('ls-remote --heads --exit-code origin ' + releaseBranch)
+  assert git('ls-remote --heads --exit-code origin ' + releaseBranch, printError=false)
   assert !git('checkout ' + releaseFromBranch)
   assert !git('pull origin ' + releaseFromBranch)
   assert !git('branch ' + releaseBranch)
