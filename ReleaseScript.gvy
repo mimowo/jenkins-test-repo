@@ -56,7 +56,7 @@ def verifyTagDoesntExist() {
 
 def action = this.args[0]
 
-if(action == 'before-build') {
+if(action == 'before-maven-build') {
   verifyTagDoesntExist()
 
   git('checkout ' + releaseFromBranch)
