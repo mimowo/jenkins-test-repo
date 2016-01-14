@@ -1,4 +1,4 @@
-evaluate(new File("release-commons.gvy"))
+evaluate(new File("ReleaseCommons.gvy"))
 
 def env = System.getenv()
 
