@@ -4,11 +4,6 @@
 // can take either a string or a list of strings (for arguments with spaces)    
 // prints all output, complains and halts on error                              
 def runCommand(strList) {
-  def proc = strList.execute()
-  proc.in.eachLine { line -> println line }
-  proc.out.close()
-  proc.waitFor()
-
   print "[INFO] ( "
   if(strList instanceof List) {
     strList.each { print "${it} " }
@@ -16,6 +11,11 @@ def runCommand(strList) {
     print strList
   }
   println " )"
+
+  def proc = strList.execute()
+  proc.in.eachLine { line -> println line }
+  proc.out.close()
+  proc.waitFor()
 
   if (proc.exitValue()) {
     println "gave the following error: "
