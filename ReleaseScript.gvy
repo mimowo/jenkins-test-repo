@@ -31,16 +31,16 @@ def runCommand(strList) {
   return proc.exitValue()
 }
 
-def git(args, printError = true) {
-  runCommand("git" + " " + args, printError)
+def git(args) {
+  runCommand("git" + " " + args)
 }
 
 def mvn(args) {
-  runCommand("sh mvn" + " " + args, printError)
+  runCommand("sh mvn" + " " + args)
 }
 
 def gradle(args) {
-  runCommand("gradle" + " " + args, printError)
+  runCommand("gradle" + " " + args)
 }
 
 def verifyTagDoesntExist() {
