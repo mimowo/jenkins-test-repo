@@ -1,6 +1,7 @@
 def env = System.getenv()
 
-releseVersion = env['RELEASE_VERSION']
+releaseVersion = env['RELEASE_VERSION']
+releaseBranch = "release-" + releaseVersion
 developmentVersion = env['DEVELOPMENT_VERSION']
 releaseFromBranch = env['RELEASE_FROM_BRANCH']
 (git_cmd, mvn_cmd, gradle_cmd) = ["git", "mvn", "gradle"]
@@ -43,13 +44,13 @@ def gradle(args) {
 
 git('checkout ' + releaseFromBranch)
 git('pull')
-git('branch ' + releseVersion)
+git('branch ' + releaseBranch)
 mvn('versions:set -DnewVersion=' + developmentVersion)
 git('add pom.xml')
 runCommand(["git", "commit", "-m", "version updated to "])
 git('push origin ' + releaseFromBranch)
-git('checkout ' + releseVersion)
-mvn('versions:set -DnewVersion=' + releseVersion)
+git('checkout ' + releaseBranch)
+mvn('versions:set -DnewVersion=' + releaseBranch)
 git('add pom.xml')
 runCommand(["git", "commit", "-m", "version updated to "])
-git('push origin ' + releseVersion)
+git('push origin ' + releaseBranch)
