@@ -7,6 +7,6 @@ releaseFromBranch = env['RELEASE_FROM_BRANCH']
 
 new GroovyShell().parse( new File( 'ReleaseCommons.gvy' ) ).with {
   git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
-  runCommand(["git", "tag", releaseVersion , releaseBranch])
+  git("tag " + releaseVersion + " " +releaseBranch])
   git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
 }
