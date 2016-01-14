@@ -35,7 +35,7 @@ def git(args) {
 }
 
 def mvn(args) {
-	runCommand(mvn_cmd + " " + args)
+	runCommand("sh " + mvn_cmd + " " + args)
 }
 
 def gradle(args) {
