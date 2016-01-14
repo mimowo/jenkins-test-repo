@@ -12,10 +12,8 @@ new GroovyShell().parse( new File( 'ReleaseCommons.gvy' ) ).with {
   mvn('versions:set -DnewVersion=' + developmentVersion)
   git('add .')
   runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
-  //git('push origin ' + releaseFromBranch)
   git('checkout ' + releaseBranch)
   mvn('versions:set -DnewVersion=' + releaseVersion) 
   git('add .') 
   runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
-  //git('push origin ' + releaseBranch)
 }
