@@ -31,24 +31,10 @@ def runCommand(strList) {
 }
 
 def git(args) {
-	runCommand(git_cmd + " " + args)
+  runCommand(git_cmd + " " + args)
 }
 
-def mvn(args) {
-	runCommand("sh " + mvn_cmd + " " + args)
-}
+git("checkout " + releaseFromBranch)
+git("reset --hard HEAD~1")
+git('branch -d ' + releaseBranch)
 
-def gradle(args) {
-	runCommand(gradle_cmd + " " + args)
-}
-
-git('checkout ' + releaseFromBranch)
-git('pull origin ' + releaseFromBranch)
-git('branch ' + releaseBranch)
-mvn('versions:set -DnewVersion=' + developmentVersion)
-git('add pom.xml')
-runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
-git('checkout ' + releaseBranch)
-mvn('versions:set -DnewVersion=' + releaseVersion)
-git('add pom.xml')
-runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
