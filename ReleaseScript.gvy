@@ -11,7 +11,7 @@ releaseFromBranch = env['RELEASE_FROM_BRANCH']
 // a wrapper closure around executing a string                                  
 // can take either a string or a list of strings (for arguments with spaces)    
 // prints all output, complains and halts on error                              
-def runCommand(strList, printError = true) {
+def runCommand(strList) {
   print "[INFO] ( "
   if(strList instanceof List) {
     strList.each { print "${it} " }
@@ -26,11 +26,7 @@ def runCommand(strList, printError = true) {
   proc.waitFor()
 
   if (proc.exitValue()) {
-    if (printError) {
-      println "gave the following error: "
-      println "[ERROR] ${proc.getErrorStream()}"
-    }
-    throw new RuntimeException("Failed to execute command", proc.getErrorStream())
+    throw new RuntimeException("Failed to execute command with error: ${proc.getErrorStream()}")
   }
   return proc.exitValue()
 }
@@ -47,12 +43,21 @@ def gradle(args) {
   runCommand("gradle" + " " + args, printError)
 }
 
+def verifyTagDoesntExist() {
+  try 
+    git('ls-remote --tags --exit-code origin ' + releaseTag)
+    //git('ls-remote --heads --exit-code origin ' + releaseBranch)
+  } (RuntimeException e) {
+    println "Tag " + releaseTag + " does not exist yet."
+  } 
+  throw RuntimeException("Tag " + releaseTag + " already exists!")
+}
+
 def action = this.args[0]
 
 if(action == 'prepare-maven') {
-  git('ls-remote --tags --exit-code origin ' + releaseTag, printError=false)
-  git('ls-remote --heads --exit-code origin ' + releaseBranch, printError=false)
-  
+  verifyTagDoesntExist()
+
   git('checkout ' + releaseFromBranch)
   git('pull origin ' + releaseFromBranch)
   git('branch ' + releaseBranch)
