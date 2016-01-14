@@ -1,5 +1,3 @@
-evaluate(new File("ReleaseCommons.gvy"))
-
 def env = System.getenv()
 
 releaseVersion = env['RELEASE_VERSION']
