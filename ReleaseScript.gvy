@@ -56,7 +56,7 @@ def verifyTagDoesntExist() {
 
 def action = this.args[0]
 
-if(action == 'prepare-maven') {
+if(action == 'before-build') {
   verifyTagDoesntExist()
 
   git('checkout ' + releaseFromBranch)
@@ -69,7 +69,7 @@ if(action == 'prepare-maven') {
   mvn('versions:set -DnewVersion=' + releaseVersion + '-DgenerateBackupPoms=false')
   git('add .') 
   runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
-} else if (action == 'success') {
+} else if (action == 'after-build-success') {
   git("tag " + releaseTag + " " +releaseBranch)
   git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
   git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
