@@ -2,6 +2,7 @@ def env = System.getenv()
 
 releaseVersion = env['RELEASE_VERSION']
 releaseBranch = "release-" + releaseVersion
+releaseTag = releaseVersion
 developmentVersion = env['DEVELOPMENT_VERSION']
 releaseFromBranch = env['RELEASE_FROM_BRANCH']
 
@@ -46,6 +47,7 @@ def gradle(args) {
 def action = this.args[0]
 
 if(action == 'prepare-maven') {
+  assert git('ls-remote --tags --exit-code origin ' + releaseTag, printError=false)
   assert git('ls-remote --heads --exit-code origin ' + releaseBranch, printError=false)
   assert !git('checkout ' + releaseFromBranch)
   assert !git('pull origin ' + releaseFromBranch)
@@ -58,7 +60,7 @@ if(action == 'prepare-maven') {
   assert !git('add .') 
   assert !runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
 } else if (action == 'success') {
-  assert !git("tag " + releaseVersion + " " +releaseBranch)
+  assert !git("tag " + releaseTag + " " +releaseBranch)
   assert !git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
   assert !git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
 }
