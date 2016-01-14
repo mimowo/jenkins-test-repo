@@ -25,9 +25,12 @@ def runCommand(strList, printError = true) {
   proc.out.close()
   proc.waitFor()
 
-  if (proc.exitValue() && printError) {
-    println "gave the following error: "
-    println "[ERROR] ${proc.getErrorStream()}"
+  if (proc.exitValue()) {
+    if (printError) {
+      println "gave the following error: "
+      println "[ERROR] ${proc.getErrorStream()}"
+    }
+    throw new RuntimeException("Failed to execute command", proc.getErrorStream())
   }
   return proc.exitValue()
 }
@@ -47,20 +50,21 @@ def gradle(args) {
 def action = this.args[0]
 
 if(action == 'prepare-maven') {
-  assert git('ls-remote --tags --exit-code origin ' + releaseTag, printError=false)
-  assert git('ls-remote --heads --exit-code origin ' + releaseBranch, printError=false)
-  assert !git('checkout ' + releaseFromBranch)
-  assert !git('pull origin ' + releaseFromBranch)
-  assert !git('branch ' + releaseBranch)
-  assert !mvn('versions:set -DnewVersion=' + developmentVersion + '-DgenerateBackupPoms=false')
-  assert !git('add .')
-  assert !runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
-  assert !git('checkout ' + releaseBranch)
-  assert !mvn('versions:set -DnewVersion=' + releaseVersion + '-DgenerateBackupPoms=false')
-  assert !git('add .') 
-  assert !runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
+  git('ls-remote --tags --exit-code origin ' + releaseTag, printError=false)
+  git('ls-remote --heads --exit-code origin ' + releaseBranch, printError=false)
+  
+  git('checkout ' + releaseFromBranch)
+  git('pull origin ' + releaseFromBranch)
+  git('branch ' + releaseBranch)
+  mvn('versions:set -DnewVersion=' + developmentVersion + '-DgenerateBackupPoms=false')
+  git('add .')
+  runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
+  git('checkout ' + releaseBranch)
+  mvn('versions:set -DnewVersion=' + releaseVersion + '-DgenerateBackupPoms=false')
+  git('add .') 
+  runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
 } else if (action == 'success') {
-  assert !git("tag " + releaseTag + " " +releaseBranch)
-  assert !git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
-  assert !git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
+  git("tag " + releaseTag + " " +releaseBranch)
+  git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
+  git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
 }
