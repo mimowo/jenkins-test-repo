@@ -14,4 +14,5 @@ target/
 release.properties
 release-pom.xml
 pom.xml.versionsBackup
+pom.xml.releaseBackup
 	
