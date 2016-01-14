@@ -21,7 +21,7 @@ def runCommand(strList) {
     println "gave the following error: "
     println "[ERROR] ${proc.getErrorStream()}"
   }
-  assert !proc.exitValue()
+  return proc.exitValue()
 }
 
 def git(args) {

@@ -6,7 +6,7 @@ developmentVersion = env['DEVELOPMENT_VERSION']
 releaseFromBranch = env['RELEASE_FROM_BRANCH']
 
 new GroovyShell().parse( new File( 'ReleaseCommons.gvy' ) ).with {
-  git("checkout " + releaseFromBranch)
-  git("reset --hard HEAD~1")
-  git('branch -d ' + releaseBranch)
+  assert !git("checkout " + releaseFromBranch)
+  assert !git("reset --hard HEAD~1")
+  assert !git('branch -d ' + releaseBranch)
 }
