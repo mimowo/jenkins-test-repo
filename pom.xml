@@ -4,7 +4,7 @@
 
  <groupId>org.misias</groupId>
  <artifactId>test.jenkins</artifactId>
- <version>0.0.91-SNAPSHOT-DgenerateBackupPoms=false</version>
+ <version>0.0.92-SNAPSHOT-DgenerateBackupPoms=false</version>
  <packaging>jar</packaging>
 
  <name>test.jenkins</name>
