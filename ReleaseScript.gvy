@@ -47,7 +47,7 @@ def verifyTagDoesntExist() {
   try {
     git('ls-remote --tags --exit-code origin ' + releaseTag)
     //git('ls-remote --heads --exit-code origin ' + releaseBranch)
-  } (RuntimeException e) {
+  } catch (RuntimeException e) {
     println "Tag " + releaseTag + " does not exist yet."
   }
   throw RuntimeException("Tag " + releaseTag + " already exists!")
