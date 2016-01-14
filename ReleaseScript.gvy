@@ -50,7 +50,7 @@ def verifyTagDoesntExist() {
   } catch (RuntimeException e) {
     println "Tag " + releaseTag + " does not exist yet."
   }
-  throw RuntimeException("Tag " + releaseTag + " already exists!")
+  throw new RuntimeException("Tag " + releaseTag + " already exists!")
 }
 
 def action = this.args[0]
