@@ -25,13 +25,13 @@ def runCommand(strList) {
 }
 
 def git(args) {
-	runCommand(git_cmd + " " + args)
+	runCommand("git" + " " + args)
 }
 
 def mvn(args) {
-	runCommand("sh " + mvn_cmd + " " + args)
+	runCommand("sh " + "mvn" + " " + args)
 }
 
 def gradle(args) {
-	runCommand(gradle_cmd + " " + args)
+	runCommand("gradle" + " " + args)
 }
