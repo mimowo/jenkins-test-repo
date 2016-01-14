@@ -35,12 +35,10 @@ def git(args) {
 }
 
 git('checkout ' + releaseFromBranch)
-git('add pom.xml')
-runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
+
 git('push origin ' + releaseFromBranch)
 
 git('checkout ' + releaseBranch)
-git('add pom.xml')
-runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
+
 //git('tag')
 git('push origin ' + releaseBranch)
