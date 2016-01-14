@@ -52,11 +52,11 @@ if(action == 'prepare-maven') {
   assert !git('checkout ' + releaseFromBranch)
   assert !git('pull origin ' + releaseFromBranch)
   assert !git('branch ' + releaseBranch)
-  assert !mvn('versions:set -DnewVersion=' + developmentVersion)
+  assert !mvn('versions:set -DnewVersion=' + developmentVersion + '-DgenerateBackupPoms=false')
   assert !git('add .')
   assert !runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
   assert !git('checkout ' + releaseBranch)
-  assert !mvn('versions:set -DnewVersion=' + releaseVersion) 
+  assert !mvn('versions:set -DnewVersion=' + releaseVersion + '-DgenerateBackupPoms=false')
   assert !git('add .') 
   assert !runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
 } else if (action == 'success') {
