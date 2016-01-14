@@ -7,7 +7,7 @@ releaseBranch = "release-" + releaseVersion
 developmentVersion = env['DEVELOPMENT_VERSION']
 releaseFromBranch = env['RELEASE_FROM_BRANCH']
 
-new GroovyShell().parse( new File( 'release-commons.gvy' ) ).with {
+new GroovyShell().parse( new File( 'ReleaseCommons.gvy' ) ).with {
 	git('checkout ' + releaseFromBranch)
 	git('pull origin ' + releaseFromBranch)
 	git('branch ' + releaseBranch)
