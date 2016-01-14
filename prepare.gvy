@@ -5,29 +5,40 @@ developmentVersion = env['DEVELOPMENT_VERSION']
 releaseFromBranch = env['RELEASE_FROM_BRANCH']
 (git_cmd, mvn_cmd, gradle_cmd) = ["git", "mvn", "gradle"]
 
-println(git_cmd)
+// a wrapper closure around executing a string                                  
+// can take either a string or a list of strings (for arguments with spaces)    
+// prints all output, complains and halts on error                              
+def runCommand(strList) {
+  def proc = strList.execute()
+  proc.in.eachLine { line -> println line }
+  proc.out.close()
+  proc.waitFor()
 
-def run(cmd) {
-	println('Command: ' + cmd)
-	def proc = cmd.execute()
-	proc.waitFor()
-	proc.text.eachLine {println it}
-	if (proc.exitValue()) {
-		println "Command failed!"
-	}
-	//assert !proc.exitValue()
+  print "[INFO] ( "
+  if(strList instanceof List) {
+    strList.each { print "${it} " }
+  } else {
+    print strList
+  }
+  println " )"
+
+  if (proc.exitValue()) {
+    println "gave the following error: "
+    println "[ERROR] ${proc.getErrorStream()}"
+  }
+  assert !proc.exitValue()
 }
 
 def git(args) {
-	run(git_cmd + " " + args)
+	runCommand(git_cmd + " " + args)
 }
 
 def mvn(args) {
-	run(mvn_cmd + " " + args)
+	runCommand(mvn_cmd + " " + args)
 }
 
 def gradle(args) {
-	run(gradle_cmd + " " + args)
+	runCommand(gradle_cmd + " " + args)
 }
 
 git('checkout ' + releaseFromBranch)
