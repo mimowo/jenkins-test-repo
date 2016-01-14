@@ -37,4 +37,5 @@ def git(args) {
 git('checkout ' + releaseFromBranch)
 git('push origin ' + releaseFromBranch)
 git('checkout ' + releaseBranch)
-git('push origin ' + releaseBranch)
+runCommand(["git", "-a", releaseVersion, "Tag for release"])
+git('push origin ' + releaseBranch + ' --tags')
