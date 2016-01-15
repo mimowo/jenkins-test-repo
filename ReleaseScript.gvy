@@ -66,9 +66,11 @@ def verifyTagDoesntExist() {
 }
 
 def createReleaseBranch() {
-  git('checkout ' + releaseFromBranch)
-  //git('pull origin ' + releaseFromBranch)
-  git('branch ' + releaseBranch)  
+  if (releaseFromBranch != "master") {
+    git('checkout ' + releaseFromBranch)
+  }
+  git('branch ' + releaseBranch)
+  git('pull origin ' + releaseFromBranch)
 }
 
 def commitAndCheckoutReleaseBranch() {
