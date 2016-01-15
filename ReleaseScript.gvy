@@ -73,13 +73,18 @@ def commitReleaseBranch() {
 
 def action = this.args[0]
 
+
 if(action == 'create-release-branch') {
+  createReleaseBranch();
+}
+
+if(action == 'verify-and-create-release-branch') {
   verifyTagDoesntExist()
 
   createReleaseBranch();
 } 
 
-if(action == 'commit-and-checkout-release-branch') {
+if(action == 'commit-current-and-checkout-release-branch') {
   commitAndCheckoutReleaseBranch();
 }
 
