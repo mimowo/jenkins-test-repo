@@ -43,6 +43,17 @@ def gradle(args) {
   runCommand("sh gradle" + " " + args)
 }
 
+def deleteLocalBranchIfNeeded() {
+  try {
+    git('rev-parse --verify ' + releaseBranch)
+  } catch (all) {
+    println "[INFO] Local branch " + releaseBranch + " does not exist, continue."
+    return null
+  }
+  println "[INFO] Local branch " + releaseBranch + " exits, removing."
+  git('branch -D ' + releaseBranch)
+}
+
 def verifyTagDoesntExist() {
   try {
     git('ls-remote --tags --exit-code origin ' + releaseTag)
@@ -75,6 +86,8 @@ def action = this.args[0]
 
 
 if(action == 'create-release-branch') {
+  deleteLocalBranchIfNeeded()
+
   createReleaseBranch();
 }
 
