@@ -36,7 +36,7 @@ def git(args) {
 }
 
 def mvn(args) {
-  runCommand("mvn" + " " + args)
+  runCommand("sh mvn" + " " + args)
 }
 
 def gradle(args) {
@@ -54,42 +54,60 @@ def verifyTagDoesntExist() {
   throw new RuntimeException("Tag " + releaseTag + " already exists!")
 }
 
-def beforeBuildSetUpSourceBranch() {
+def createReleaseBranch() {
   git('checkout ' + releaseFromBranch)
-  git('pull origin ' + releaseFromBranch)
+  //git('pull origin ' + releaseFromBranch)
   git('branch ' + releaseBranch)  
 }
 
-def beforeBuildSetUpTargetBranch() {
+def commitAndCheckoutReleaseBranch() {
   git('add .')
   runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
   git('checkout ' + releaseBranch)
 }
 
-def beforeBuildSetUpTargetBranchCommit() {
+def commitReleaseBranch() {
   git('add .') 
   runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
 }
 
 def action = this.args[0]
 
+if(action == 'create-release-branch') {
+  verifyTagDoesntExist()
+
+  createReleaseBranch();
+} 
+
+if(action == 'commit-and-checkout-release-branch') {
+  commitAndCheckoutReleaseBranch();
+}
+
+if(action == 'commit-release-branch') {
+  commitReleaseBranch();
+}
+
 if(action == 'before-maven-build') {
   verifyTagDoesntExist()
 
-  beforeBuildSetUpSourceBranch();
+  createReleaseBranch();
   mvn('versions:set -DnewVersion=' + developmentVersion + '-DgenerateBackupPoms=false')
-  beforeBuildSetUpTargetBranch()
+  commitAndCheckoutReleaseBranch()
   mvn('versions:set -DnewVersion=' + releaseVersion + '-DgenerateBackupPoms=false')
-  beforeBuildSetUpTargetBranchCommit()
-} else if (action =='before-gradle-build') {
+  commitReleaseBranch()
+} 
+
+if (action =='before-gradle-build') {
   verifyTagDoesntExist()
 
-  beforeBuildSetUpSourceBranch();
+  createReleaseBranch();
   gradle('setVersion -PnewVersion=' + developmentVersion)
-  beforeBuildSetUpTargetBranch()
+  commitAndCheckoutReleaseBranch()
   gradle('setVersion -PnewVersion=' + releaseVersion)
-  beforeBuildSetUpTargetBranchCommit()
-} else if (action == 'after-build-success') {
+  commitReleaseBranch()
+} 
+
+if (action == 'after-build-success') {
   git("tag " + releaseTag + " " +releaseBranch)
   git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
   git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
