@@ -36,11 +36,11 @@ def git(args) {
 }
 
 def mvn(args) {
-  runCommand("sh mvn" + " " + args)
+  runCommand("mvn" + " " + args)
 }
 
 def gradle(args) {
-  runCommand("gradle" + " " + args)
+  runCommand("sh gradle" + " " + args)
 }
 
 def verifyTagDoesntExist() {
@@ -54,21 +54,41 @@ def verifyTagDoesntExist() {
   throw new RuntimeException("Tag " + releaseTag + " already exists!")
 }
 
+def beforeBuildSetUpSourceBranch() {
+  git('checkout ' + releaseFromBranch)
+  git('pull origin ' + releaseFromBranch)
+  git('branch ' + releaseBranch)  
+}
+
+def beforeBuildSetUpTargetBranch() {
+  git('add .')
+  runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
+  git('checkout ' + releaseBranch)
+}
+
+def beforeBuildSetUpTargetBranchCommit() {
+  git('add .') 
+  runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
+}
+
 def action = this.args[0]
 
 if(action == 'before-maven-build') {
   verifyTagDoesntExist()
 
-  git('checkout ' + releaseFromBranch)
-  git('pull origin ' + releaseFromBranch)
-  git('branch ' + releaseBranch)
+  beforeBuildSetUpSourceBranch();
   mvn('versions:set -DnewVersion=' + developmentVersion + '-DgenerateBackupPoms=false')
-  git('add .')
-  runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
-  git('checkout ' + releaseBranch)
+  beforeBuildSetUpTargetBranch()
   mvn('versions:set -DnewVersion=' + releaseVersion + '-DgenerateBackupPoms=false')
-  git('add .') 
-  runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
+  beforeBuildSetUpTargetBranchCommit()
+} else if (action =='before-gradle-build') {
+  verifyTagDoesntExist()
+
+  beforeBuildSetUpSourceBranch();
+  gradle('setVersion -PnewVersion=' + developmentVersion)
+  beforeBuildSetUpTargetBranch()
+  gradle('setVersion -PnewVersion=' + releaseVersion)
+  beforeBuildSetUpTargetBranchCommit()
 } else if (action == 'after-build-success') {
   git("tag " + releaseTag + " " +releaseBranch)
   git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
