@@ -43,7 +43,7 @@ def gradle(args) {
   runCommand("sh gradle" + " " + args)
 }
 
-def deleteLocalBranchIfNeeded() {
+def deleteLocalReleaseBranchIfNeeded() {
   try {
     git('rev-parse --verify ' + releaseBranch)
   } catch (all) {
@@ -86,14 +86,14 @@ def action = this.args[0]
 
 
 if(action == 'create-release-branch') {
-  deleteLocalBranchIfNeeded()
-
+  deleteLocalReleaseBranchIfNeeded()
   createReleaseBranch();
 }
 
 if(action == 'verify-and-create-release-branch') {
   verifyTagDoesntExist()
 
+  deleteLocalReleaseBranchIfNeeded()
   createReleaseBranch();
 } 
 
