@@ -5,12 +5,10 @@ releaseBranch = "release-" + releaseVersion
 releaseTag = releaseVersion
 developmentVersion = env['DEVELOPMENT_VERSION']
 releaseFromBranch = env['RELEASE_FROM_BRANCH']
+defaultBuildBranch = "master"
 
-(git_cmd, mvn_cmd, gradle_cmd) = ["git", "mvn", "gradle"]
+git_cmd = "git"
 
-// a wrapper closure around executing a string                                  
-// can take either a string or a list of strings (for arguments with spaces)    
-// prints all output, complains and halts on error                              
 def runCommand(strList) {
   print "[INFO] ( "
   if(strList instanceof List) {
@@ -32,15 +30,7 @@ def runCommand(strList) {
 }
 
 def git(args) {
-  runCommand("git" + " " + args)
-}
-
-def mvn(args) {
-  runCommand("sh mvn" + " " + args)
-}
-
-def gradle(args) {
-  runCommand("sh gradle" + " " + args)
+  runCommand(git_cmd + " " + args)
 }
 
 def deleteLocalReleaseBranchIfNeeded() {
@@ -66,7 +56,7 @@ def verifyTagDoesntExist() {
 }
 
 def createReleaseBranch() {
-  if (releaseFromBranch != "master") {
+  if (releaseFromBranch != defaultBuildBranch) {
     git('checkout ' + releaseFromBranch)
   }
   git('branch ' + releaseBranch)
@@ -75,60 +65,32 @@ def createReleaseBranch() {
 
 def commitAndCheckoutReleaseBranch() {
   git('add .')
-  runCommand(["git", "commit", "-m", "version updated to " + developmentVersion])
+  runCommand(["git", "commit", "-m", "Development version updated to " + developmentVersion])
   git('checkout ' + releaseBranch)
 }
 
 def commitReleaseBranch() {
   git('add .') 
-  runCommand(["git", "commit", "-m", "version updated to " + releaseVersion])
+  runCommand(["git", "commit", "-m", "Release version updated to " + releaseVersion])
+}
+
+def pushTagsAndBranches() {
+  git("tag " + releaseTag + " " +releaseBranch)
+  git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
+  git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
 }
 
 def action = this.args[0]
 
-
-if(action == 'create-release-branch') {
-  deleteLocalReleaseBranchIfNeeded()
-  createReleaseBranch();
-}
-
-if(action == 'verify-and-create-release-branch') {
+if (action == 'verify-and-create-release-branch') {
   verifyTagDoesntExist()
 
   deleteLocalReleaseBranchIfNeeded()
   createReleaseBranch();
-} 
-
-if(action == 'commit-current-and-checkout-release-branch') {
+} else if (action == 'commit-current-and-checkout-release-branch') {
   commitAndCheckoutReleaseBranch();
-}
-
-if(action == 'commit-release-branch') {
+} else if (action == 'commit-release-branch') {
   commitReleaseBranch();
-}
-
-if(action == 'before-maven-build') {
-  verifyTagDoesntExist()
-
-  createReleaseBranch();
-  mvn('versions:set -DnewVersion=' + developmentVersion + '-DgenerateBackupPoms=false')
-  commitAndCheckoutReleaseBranch()
-  mvn('versions:set -DnewVersion=' + releaseVersion + '-DgenerateBackupPoms=false')
-  commitReleaseBranch()
-} 
-
-if (action =='before-gradle-build') {
-  verifyTagDoesntExist()
-
-  createReleaseBranch();
-  gradle('setVersion -PnewVersion=' + developmentVersion)
-  commitAndCheckoutReleaseBranch()
-  gradle('setVersion -PnewVersion=' + releaseVersion)
-  commitReleaseBranch()
-} 
-
-if (action == 'after-build-success') {
-  git("tag " + releaseTag + " " +releaseBranch)
-  git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
-  git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
+} else if (action == 'after-build-success') {
+  pushTagsAndBranches();
 }
