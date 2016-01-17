@@ -1,0 +1,3 @@
+[submodule "release-script"]
+	path = release-script
+	url = git@github.com:mimowo/releasing-script.git
