@@ -39,7 +39,6 @@ def checkIfLocalBranchExists(branchName) {
     git('rev-parse --verify ' + branchName)
     return true;
   } catch (all) {
-    println "[INFO] Local branch " + branchName + " does not exist, continue."
     return false;
   }
 }
@@ -48,6 +47,8 @@ def deleteLocalBranchIfExists(branchName) {
   if (checkIfLocalBranchExists(branchName)) {
     println "[INFO] Local branch " + branchName + " exits, removing."
     git('branch -D ' + branchName)
+  } else {
+    println "[INFO] Local branch " + branchName + " does not exist, continue."
   }
 }
 
@@ -55,18 +56,20 @@ def deleteLocalTagIfExists(tagName) {
   if (checkIfLocalBranchExists(tagName)) {
     println "[INFO] Local tag " + tagName + " exits, removing."
     git('tag -d ' + tagName)
+  } else {
+    println "[INFO] Local tag " + tagName + " does not exist, continue."
   }
 }
 
-def verifyRemoteTagDoesntExist() {
+def verifyRemoteTagDoesntExist(tagName) {
   try {
-    git('ls-remote --tags --exit-code origin ' + releaseTag)
+    git('ls-remote --tags --exit-code origin ' + tagName)
     //git('ls-remote --heads --exit-code origin ' + releaseBranch)
   } catch (RuntimeException e) {
-    println "[INFO] Tag " + releaseTag + " does not exist yet, continue."
+    println "[INFO] Tag " + tagName + " does not exist yet, continue."
     return null
   }
-  throw new RuntimeException("Tag " + releaseTag + " already exists!")
+  throw new RuntimeException("Tag " + tagName + " already exists!")
 }
 
 def createReleaseBranch() {
@@ -97,7 +100,7 @@ def pushTagsAndBranches() {
 def action = this.args[0]
 
 if (action == 'verify-and-create-release-branch') {
-  verifyRemoteTagDoesntExist()
+  verifyRemoteTagDoesntExist(releaseTag)
 
   deleteLocalBranchIfExists(releaseBranch)
   deleteLocalTagIfExists(releaseTag)
