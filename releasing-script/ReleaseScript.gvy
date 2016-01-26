@@ -34,15 +34,15 @@ def git(args) {
   runCommand(git_cmd + " " + args)
 }
 
-def deleteLocalReleaseBranchIfNeeded() {
+def deleteLocalReleaseBranchIfNeeded(localBranchName) {
   try {
-    git('rev-parse --verify ' + releaseBranch)
+    git('rev-parse --verify ' + localBranchName)
   } catch (all) {
-    println "[INFO] Local branch " + releaseBranch + " does not exist, continue."
+    println "[INFO] Local branch " + localBranchName + " does not exist, continue."
     return null
   }
-  println "[INFO] Local branch " + releaseBranch + " exits, removing."
-  git('branch -D ' + releaseBranch)
+  println "[INFO] Local branch " + localBranchName + " exits, removing."
+  git('branch -D ' + releaslocalBranchNameeBranch)
 }
 
 def verifyTagDoesntExist() {
@@ -73,10 +73,10 @@ def commitAndCheckoutReleaseBranch() {
 def commitReleaseBranch() {
   git('add .')
   runCommand(["git", "commit", "-m", "Release version updated to " + releaseVersion])
+  git("tag " + releaseTag + " " +releaseBranch)
 }
 
 def pushTagsAndBranches() {
-  git("tag " + releaseTag + " " +releaseBranch)
   git('push origin ' + releaseFromBranch + ':' + releaseFromBranch)
   git('push origin ' + releaseBranch + ':' + releaseBranch + ' --tags')
 }
@@ -86,7 +86,7 @@ def action = this.args[0]
 if (action == 'verify-and-create-release-branch') {
   verifyTagDoesntExist()
 
-  deleteLocalReleaseBranchIfNeeded()
+  deleteLocalReleaseBranchIfNeeded(releaseBranch)
   createReleaseBranch();
 } else if (action == 'commit-current-and-checkout-release-branch') {
   commitAndCheckoutReleaseBranch();
